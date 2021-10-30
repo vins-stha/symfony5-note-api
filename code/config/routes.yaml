@@ -9,3 +9,18 @@ notes_add:
   path: /api/v1/notes/add
   controller: App\Controller\NoteApiController:createAction
   methods: [POST]
+
+notes_findById:
+  path: /api/v1/notes/{id}
+  controller: App\Controller\NoteApiController:findByIdAction
+  methods: [GET]
+
+notes_update:
+  path: /api/v1/notes/{id}
+  controller: App\Controller\NoteApiController:updateByIdAction
+  methods: [PUT]
+
+notes_delete:
+  path: /api/v1/notes/{id}
+  controller: App\Controller\NoteApiController:deleteByIdAction
+  methods: [DELETE]
