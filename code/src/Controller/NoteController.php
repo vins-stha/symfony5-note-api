@@ -13,21 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/note')]
 class NoteController extends AbstractController
 {
-    #[Route('/', name: 'note_index', methods: ['GET'])]
-    public function index(NoteRepository $noteRepository): Response
-    {
-//        return $this->render('note/index.html.twig', [
-//            'notes' => $noteRepository->findAll(),
-//        ]);
-      $notes = $this->getDoctrine()->getRepository(Note::class)->findAll();
-      return $this->json($notes);
-    }
+  #[Route('/', name: 'note_index', methods: ['GET'])]
+  public function index(NoteRepository $noteRepository): Response
+  {
+    return $this->render('note/index.html.twig', [
+        'notes' => $noteRepository->findAll(),
+    ]);
+  }
 
   public function listAction(NoteRepository $noteRepository): Response
   {
     $notes = $this->getDoctrine()->getRepository(Note::class)->findAll();
     return $this->json($notes);
   }
+
   public function addAction(Request $request): Response
   {
     $note = new Note();
@@ -36,9 +35,8 @@ class NoteController extends AbstractController
     $form = $this->createForm(NoteType::class, $note);
     $form->submit($data);
 
-    if (!$form->isSubmitted() || !$form->isValid())
-    {
-       print('Error');
+    if ( !$form->isValid()) {
+      print('Not valid \n'. $this->json($data));
       exit;
     }
 
@@ -49,66 +47,66 @@ class NoteController extends AbstractController
     $response =  new Response($this->json($note));
     $response->setStatusCode(Response::HTTP_OK);
 
-    return $this->json($data);
-
+//    return $this->json($data);
+    return print('here=>'.$this->json($data));
   }
 
-    #[Route('/new', name: 'note_new', methods: ['GET','POST'])]
-    public function new(Request $request): Response
-    {
-        $note = new Note();
-        $form = $this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);
+  #[Route('/new', name: 'note_new', methods: ['GET','POST'])]
+  public function new(Request $request): Response
+  {
+    $note = new Note();
+    $form = $this->createForm(NoteType::class, $note);
+    $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($note);
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($note);
+      $entityManager->flush();
 
-            return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('note/new.html.twig', [
-            'note' => $note,
-            'form' => $form,
-        ]);
+      return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}', name: 'note_show', methods: ['GET'])]
-    public function show(Note $note): Response
-    {
-        return $this->render('note/show.html.twig', [
-            'note' => $note,
-        ]);
+    return $this->renderForm('note/new.html.twig', [
+        'note' => $note,
+        'form' => $form,
+    ]);
+  }
+
+  #[Route('/{id}', name: 'note_show', methods: ['GET'])]
+  public function show(Note $note): Response
+  {
+    return $this->render('note/show.html.twig', [
+        'note' => $note,
+    ]);
+  }
+
+  #[Route('/{id}/edit', name: 'note_edit', methods: ['GET','POST'])]
+  public function edit(Request $request, Note $note): Response
+  {
+    $form = $this->createForm(NoteType::class, $note);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+      $this->getDoctrine()->getManager()->flush();
+
+      return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/edit', name: 'note_edit', methods: ['GET','POST'])]
-    public function edit(Request $request, Note $note): Response
-    {
-        $form = $this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);
+    return $this->renderForm('note/edit.html.twig', [
+        'note' => $note,
+        'form' => $form,
+    ]);
+  }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('note/edit.html.twig', [
-            'note' => $note,
-            'form' => $form,
-        ]);
+  #[Route('/{id}', name: 'note_delete', methods: ['POST'])]
+  public function delete(Request $request, Note $note): Response
+  {
+    if ($this->isCsrfTokenValid('delete' . $note->getId(), $request->request->get('_token'))) {
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->remove($note);
+      $entityManager->flush();
     }
 
-    #[Route('/{id}', name: 'note_delete', methods: ['POST'])]
-    public function delete(Request $request, Note $note): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$note->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($note);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);
-    }
+    return $this->redirectToRoute('note_index', [], Response::HTTP_SEE_OTHER);
+  }
 }

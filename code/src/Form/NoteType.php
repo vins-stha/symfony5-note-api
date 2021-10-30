@@ -17,12 +17,16 @@ class NoteType extends AbstractType
         $builder
             ->add('title', TextType::class,[
                 'constraints' => [
-                    new NotNull()
+                    new NotNull([
+                        'message' => 'Empty values not allowed'
+                    ])
                 ]
             ])
             ->add('text', TextType::class,[
                 'constraints' => [
-                    new NotNull()
+                    new NotNull([
+                        'message' => 'Text can not be empty'
+                    ])
                 ]
             ])
             ->add('created_time',DateTimeType::class,[
@@ -36,6 +40,7 @@ class NoteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Note::class,
+            'csrf_protection' => false
         ]);
     }
 }
