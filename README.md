@@ -1,10 +1,9 @@
-# Note API
+# Symfony 5 Note API
 
 Symfony based note API. Provides API endpoints to create, read, update and delete notes.
 
 ## Setup
 
-1. Install [docker](https://www.docker.com/get-started)
 2. Start up docker compose instance - `docker-compose up --build -d`
 3. Gain access to php bash shell - `docker exec -it php bash`
 4. Go to root of symfony project - `cd code`
@@ -28,3 +27,51 @@ Symfony based note API. Provides API endpoints to create, read, update and delet
 8. (Optional) Write unit or web tests.
 9. Send us a link to your PR.
 "# symfony5-note-api" 
+
+
+## Testing scenarios
+   1. `api/v1/notes/add` - Add new note.
+   
+        Method = [POST].            
+        
+           {
+                "title" : "title-foo",            
+                "text": "text-bar",
+                "created_time":"2012-01-01 02:02:00"
+            }
+   2. `api/v1/notes/` - List all notes (ordered by created date)
+      
+              Method = [GET].
+              
+              api/v1/notes/
+              
+           
+   3. `api/v1/notes/{id}` - Update note with id = {id}
+   
+           Method = [PUT].
+           
+           api/v1/notes/1
+           
+              {
+                   "title" : "title-foo",            
+                   "text": "text-bar",
+                   "created_time":"2012-01-01 02:02:00"
+               }
+   4. `api/v1/notes/{id}` - Delete note with id = {id}
+      
+              Method = [DELETE].
+              
+              api/v1/notes/1
+              
+              
+   5. `api/v1/notes/{id}` - Find note with id = {id}
+      
+              Method = [GET].
+              
+              api/v1/notes/1
+              
+                 {
+                      "title" : "title-foo",            
+                      "text": "text-bar",
+                      "created_time":"2012-01-01 02:02:00"
+                  }
