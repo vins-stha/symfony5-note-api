@@ -5,6 +5,7 @@ notes_list:
   path: /api/v1/notes
   controller: App\Controller\NoteApiController:indexAction
   methods: [GET]
+
 notes_add:
   path: /api/v1/notes/add
   controller: App\Controller\NoteApiController:createAction
