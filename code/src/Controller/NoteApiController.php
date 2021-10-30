@@ -13,17 +13,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class NoteApiController extends AbstractApiController
 {
+  /**
+   * @param NoteRepository $noteRepository
+   * @return Response
+   *
+   */
   public function indexAction(NoteRepository $noteRepository): Response
   {
-
     $repo = $this->getDoctrine()->getRepository(Note::class);
 
-    $notes = $repo->findBy(array(), array('created_time'=>'asc'));
+    $notes = $repo->findBy(array(), array('created_time' => 'asc'));
 
-//    print_r($notes);
     return $this->json($notes);
   }
 
+  /**
+   * @param Request $request
+   * @return Response
+   *
+   */
   public function createAction(Request $request): Response
   {
     $note = new Note();
@@ -53,7 +61,12 @@ class NoteApiController extends AbstractApiController
     return $response;
   }
 
-  public function findByIdAction(Request $request):Response
+  /**
+   * @param Request $request
+   * @return Response
+   *
+   */
+  public function findByIdAction(Request $request): Response
   {
     $id = $request->get('id');
 
@@ -61,15 +74,19 @@ class NoteApiController extends AbstractApiController
         'id' => $id
     ]);
 
-    if (!$note)
-    {
-      throw new NotFoundHttpException('Note with id '.$id. ' not found!');
+    if (!$note) {
+      throw new NotFoundHttpException('Note with id ' . $id . ' not found!');
     }
 
     return $this->json($note);
   }
 
-  public function updateByIdAction(Request $request):Response
+  /**
+   * @param Request $request
+   * @return Response
+   *
+   */
+  public function updateByIdAction(Request $request): Response
   {
     $id = $request->get('id');
 
@@ -79,9 +96,8 @@ class NoteApiController extends AbstractApiController
         'id' => $id
     ]);
 
-    if (!$note)
-    {
-      throw new NotFoundHttpException('Note with id '.$id. ' not found!');
+    if (!$note) {
+      throw new NotFoundHttpException('Note with id ' . $id . ' not found!');
     }
 
     $form = $this->createForm(NoteType::class, $note, [
@@ -90,23 +106,27 @@ class NoteApiController extends AbstractApiController
 
     $form->submit($data);
 
-    if (!$form->isSubmitted() || !$form->isValid())
-    {
-      return $this->respond($form,Response::HTTP_BAD_REQUEST);
+    if (!$form->isSubmitted() || !$form->isValid()) {
+      return $this->respond($form, Response::HTTP_BAD_REQUEST);
     }
 
     $em = $this->getDoctrine()->getManager();
     $em->persist($note);
     $em->flush();
 
-    $response =  new Response($this->json($note));
+    $response = new Response($this->json($note));
     $response->setStatusCode(Response::HTTP_OK);
 
     return $response;
 
   }
 
-  public function deleteByIdAction(Request $request):Response
+  /**
+   * @param Request $request
+   * @return Response
+   *
+   */
+  public function deleteByIdAction(Request $request): Response
   {
     $id = $request->get('id');
 
@@ -114,9 +134,8 @@ class NoteApiController extends AbstractApiController
         'id' => $id
     ]);
 
-    if (!$note)
-    {
-      throw new NotFoundHttpException('Note with id '.$id. ' not found!');
+    if (!$note) {
+      throw new NotFoundHttpException('Note with id ' . $id . ' not found!');
     }
 
     $em = $this->getDoctrine()->getManager();
