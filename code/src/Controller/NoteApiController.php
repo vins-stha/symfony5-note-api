@@ -15,7 +15,12 @@ class NoteApiController extends AbstractApiController
 {
   public function indexAction(NoteRepository $noteRepository): Response
   {
-    $notes = $this->getDoctrine()->getRepository(Note::class)->findAll();
+
+    $repo = $this->getDoctrine()->getRepository(Note::class);
+
+    $notes = $repo->findBy(array(), array('created_time'=>'asc'));
+
+//    print_r($notes);
     return $this->json($notes);
   }
 
@@ -121,8 +126,8 @@ class NoteApiController extends AbstractApiController
     $response = new Response();
     $response->setStatusCode(Response::HTTP_OK);
     $message = 'Deleted Successfully!';
+
     return $response->setContent($this->json($message));
-//    return print($this->json($id));
 
   }
 
