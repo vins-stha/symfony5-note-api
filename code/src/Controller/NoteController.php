@@ -16,10 +16,42 @@ class NoteController extends AbstractController
     #[Route('/', name: 'note_index', methods: ['GET'])]
     public function index(NoteRepository $noteRepository): Response
     {
-        return $this->render('note/index.html.twig', [
-            'notes' => $noteRepository->findAll(),
-        ]);
+//        return $this->render('note/index.html.twig', [
+//            'notes' => $noteRepository->findAll(),
+//        ]);
+      $notes = $this->getDoctrine()->getRepository(Note::class)->findAll();
+      return $this->json($notes);
     }
+
+  public function listAction(NoteRepository $noteRepository): Response
+  {
+    $notes = $this->getDoctrine()->getRepository(Note::class)->findAll();
+    return $this->json($notes);
+  }
+  public function addAction(Request $request): Response
+  {
+    $note = new Note();
+    $data = json_decode($request->getContent(), true);
+
+    $form = $this->createForm(NoteType::class, $note);
+    $form->submit($data);
+
+    if (!$form->isSubmitted() || !$form->isValid())
+    {
+       print('Error');
+      exit;
+    }
+
+    $em = $this->getDoctrine()->getManager();
+    $em->persist($note);
+    $em->flush();
+
+    $response =  new Response($this->json($note));
+    $response->setStatusCode(Response::HTTP_OK);
+
+    return $this->json($data);
+
+  }
 
     #[Route('/new', name: 'note_new', methods: ['GET','POST'])]
     public function new(Request $request): Response
