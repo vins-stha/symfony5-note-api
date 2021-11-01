@@ -12,6 +12,10 @@ class ApiTest extends PHPUnit\Framework\TestCase
     return $localIP;
   }
 
+  /**
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   *
+   */
   public function test_indexAction()
   {
     $client = new \GuzzleHttp\Client();
@@ -21,6 +25,11 @@ class ApiTest extends PHPUnit\Framework\TestCase
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+   * @param null $note_id
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   *
+   */
   public function test_findByIdAction($note_id = null)
   {
     $id = $note_id == null ? 3 : $note_id;
@@ -30,16 +39,10 @@ class ApiTest extends PHPUnit\Framework\TestCase
     $this->assertEquals(200, $response->getStatusCode());
   }
 
-  public function test_deleteByIdAction()
-  {
-
-    $client = new \GuzzleHttp\Client();
-
-    $response = $client->delete('http://'.$this->getLocalIP().':8001/api/v1/notes/1');
-//    var_dump($response);
-    $this->assertEquals(200, $response->getStatusCode());
-  }
-
+  /**
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   *
+   */
   public function test_createAction()
   {
     $client = new \GuzzleHttp\Client();
@@ -58,9 +61,12 @@ class ApiTest extends PHPUnit\Framework\TestCase
     $this->assertEquals(200, $response->getStatusCode());
   }
 
+  /**
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   *
+   */
   public function test_updateByIdAction()
   {
-
     $client = new \GuzzleHttp\Client();
     $formData = [
         'title' => 'This is test update for id= 2',
@@ -77,4 +83,18 @@ class ApiTest extends PHPUnit\Framework\TestCase
 
     $this->assertEquals(200, $response->getStatusCode());
   }
+
+  /**
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   *
+   */
+  public function test_deleteByIdAction()
+  {
+    $client = new \GuzzleHttp\Client();
+
+    $response = $client->delete('http://'.$this->getLocalIP().':8001/api/v1/notes/1');
+
+    $this->assertEquals(200, $response->getStatusCode());
+  }
+
 }
