@@ -75,3 +75,16 @@ Symfony based note API. Provides API endpoints to create, read, update and delet
                       "text": "text-bar",
                       "created_time":"2012-01-01 02:02:00"
                   }
+                  
+## Unit Testing
+1. Gain access to php bash shell - `docker exec -it php bash`
+or Enter the terminal
+
+2.  Go to root of symfony project - `cd code`
+
+3. Enter unit testing command `php vendor/bin/phpunit tests/ApiTest.php`
+
+    Results like :
+    ######OK (5 tests, 5 assertions)
+    
+    can be seen for successful action of unit test
