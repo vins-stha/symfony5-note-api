@@ -4,11 +4,13 @@ Symfony based note API. Provides API endpoints to create, read, update and delet
 
 ## Setup
 
+1. Start up powershell/terminal and access the project folder
 2. Start up docker compose instance - `docker-compose up --build -d`
 3. Gain access to php bash shell - `docker exec -it php bash`
 4. Go to root of symfony project - `cd code`
 5. Install dependencies - `composer install`
-6. Open site in browser [localhost:8001](http://localhost:8001)
+6. Make migrations `php bin/console make:migration`
+6. Open site in browser [localhost:8001/api/v1/notes](http://localhost:8001)
 
 ## Tasks
 
@@ -82,9 +84,11 @@ or Enter the terminal
 
 2.  Go to root of symfony project - `cd code`
 
+3. Install GuzzleHttp client  `composer require guzzlehttp/guzzle` 
+
 3. Enter unit testing command `php vendor/bin/phpunit tests/ApiTest.php`
 
     Results like :
-    ######OK (5 tests, 5 assertions)
+    ##OK (5 tests, 5 assertions)
     
     can be seen for successful action of unit test
